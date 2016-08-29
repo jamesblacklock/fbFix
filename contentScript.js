@@ -57,12 +57,8 @@ function watchForAds()
 					if( next.classList.contains('fbFix-muted') )
 						return prev;
 					
-					// this means this is the only comment in a reply list
-					if( next.parentElement.matches('.UFIReplyList') && next.parentElement.children.length == 2 )
-						next.parentElement.classList.add('fbFix-muted', 'fbFix-muted-keyword');
-					
 					// this means the comment being removed has a reply list which also should be removed
-					else if( next.nextSibling.matches('.UFIReplyList') )
+					if( next.nextSibling && next.nextSibling.matches && next.nextSibling.matches('.UFIReplyList') )
 						next.nextSibling.classList.add('fbFix-muted', 'fbFix-muted-keyword');
 					
 					next.classList.add('fbFix-muted', 'fbFix-muted-keyword');
@@ -73,7 +69,7 @@ function watchForAds()
 				}, 0);
 			
 			Array.from( globalContainer.querySelectorAll(".userContentWrapper") )
-				.filter( e => e.children.length == 2 && e.firstChild.textContent.toUpperCase().includes(keyword.toUpperCase()) )
+				.filter( e => e.childElementCount == 2 && e.firstElementChild.textContent.toUpperCase().includes(keyword.toUpperCase()) )
 				.map(findParentStory)
 				.reduce( (prev, next) =>
 				{
@@ -157,7 +153,7 @@ function watchForAds()
 	// the sroll area is smaller and the button can become visible; more stories need to be loaded
 	let moreStories = globalContainer.querySelector('[data-testid=fbfeed_placeholder_story]');
 	if(moreStories)
-		moreStories = moreStories.nextSibling;
+		moreStories = moreStories.nextSiblingElement;
 	if(moreStories)
 		moreStories.click();
 }
