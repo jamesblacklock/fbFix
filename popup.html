@@ -11,22 +11,33 @@
 		
 		button
 		{
-			padding: 0 4px;
-			border: 1px solid;
+		    padding: 0;
+			border: none;
+			font-size: 23px;
 			font-weight: bold;
 			border-radius: 3px;
 			background: white;
+			margin-top: -8px;
+			position: relative;
+			top: 3px;
+			outline: none;
+			cursor: pointer;
+		}
+		
+		input[type=checkbox]
+		{
+			position: relative;
+			top: 2px;
 		}
 		
 		#addKeyword
 		{
-			border-color: cornflowerblue;
 			color: cornflowerblue;
 		}
 		
 		#addKeyword:active
 		{
-			background: lavender;
+			color: blue;
 		}
 		
 		#keywords
@@ -41,13 +52,13 @@
 		
 		#keywords > div > button
 		{
-			border-color: red;
 			color: red;
+			top: 4px;
 		}
 		
 		#keywords > div > button:active
 		{
-			background: pink;
+			color: brown;
 		}
 	</style>
 </head>
@@ -57,6 +68,11 @@
 	<div id="keywords"></div>
 	<button id="addKeyword">+</button>
 	<input id="keywordInput">
+	<hr>
+	<div>
+		<input type='checkbox' id="hideSponsored"/>
+		Hide Sponsored Posts (ads)
+	</div>
 	
 	<script src="popup.js"></script>
 </body>

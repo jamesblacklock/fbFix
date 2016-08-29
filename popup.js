@@ -1,18 +1,46 @@
 
 
+chrome.storage.sync.get('hideAds', hideAds =>
+{
+	hideAds = hideAds.hideAds;
+	
+	if(hideAds === undefined)
+		hideAds = true;
+	
+	let hideSponsored = document.getElementById("hideSponsored");
+	
+	hideSponsored.addEventListener( "click", e =>
+	{
+		hideAds = e.target.checked;
+		chrome.storage.sync.set({'hideAds': hideAds});
+	});
+	
+	hideSponsored.checked = hideAds;
+});
+
 chrome.storage.sync.get('keywords', keywords =>
 {
 	keywords = keywords.keywords || [];
 	
 	let keywordsElement = document.getElementById("keywords");
+	let addKeywordElement = document.getElementById("addKeyword");
+	let keywordInput = document.getElementById("keywordInput");
+	
+	addKeywordElement.addEventListener("click", addKeyword);
+	
+	keywordInput.addEventListener( "keyup", e =>
+	{
+		let code = e.keyCode ? e.keyCode : e.which;
+		console.log(code);
+		if(code == 13)
+			addKeyword();
+	});
+	
 	
 	for(let keyword of keywords)
 		createKeywordElement(keyword);
 
-	let addKeywordElement = document.getElementById("addKeyword");
-
-	addKeywordElement.addEventListener("click", addKeyword);
-
+	
 	function createKeywordElement(keyword)
 	{
 		let div = document.createElement('DIV');
@@ -34,8 +62,7 @@ chrome.storage.sync.get('keywords', keywords =>
 
 	function addKeyword()
 	{
-		let keywordInput = document.getElementById("keywordInput");
-		let keyword = keywordInput.value;
+		let keyword = keywordInput.value.trim();
 		
 		if(keyword)
 		{

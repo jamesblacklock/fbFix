@@ -1,8 +1,9 @@
 function watchForAds()
 {
-	let total = 0;
+	let totalAds = 0;
 	let globalContainer = document.getElementById('globalContainer');
 	let filteredPostKeywords = [];
+	let hideAds = true;
 	
 	function findParentStory(element)
 	{
@@ -22,45 +23,126 @@ function watchForAds()
 		return temp;
 	}
 	
-	function removeAds()
+	function mutePosts()
 	{
-		let n = Array.from( globalContainer.querySelectorAll('.uiStreamSponsoredLink') )
-			.map(findParentStory)
-			.reduce( (prev, next) => { next.remove(); return prev + 1; }, 0);
+		if(hideAds)
+		{
+			let n = Array.from( globalContainer.querySelectorAll('.uiStreamSponsoredLink') )
+				.map(findParentStory)
+				.reduce( (prev, next) =>
+				{
+					if( next.classList.contains('fbFix-muted') )
+						return prev;
+					
+					next.classList.add('fbFix-muted', 'fbFix-muted-ad');
+					
+					return prev + 1;
+				}, 0);
+			
+			totalAds += n;
+			if(n > 0)
+				console.log('total ads removed: ' + totalAds);
+		}
 		
 		for(let keyword of filteredPostKeywords)
 		{
-			Array.from( document.querySelectorAll(".userContentWrapper") )
+			// remove comments first so that a comment won't make a whole post disappear
+			Array.from( globalContainer.querySelectorAll(".UFIComment") )
+				.filter( e => e.textContent.toUpperCase().includes(keyword.toUpperCase()) )
+				.reduce( (prev, next) =>
+				{
+					if( next.classList.contains('fbFix-muted') )
+						return prev;
+					
+					// this means this is the only comment in a reply list
+					if( next.parentElement.matches('.UFIReplyList') && next.parentElement.children.length == 2 )
+						next.parentElement.classList.add('fbFix-muted', 'fbFix-muted-keyword');
+					
+					// this means the comment being removed has a reply list which also should be removed
+					else if( next.nextSibling.matches('.UFIReplyList') )
+						next.nextSibling.classList.add('fbFix-muted', 'fbFix-muted-keyword');
+					
+					next.classList.add('fbFix-muted', 'fbFix-muted-keyword');
+					
+					console.log("removed comment containing keyword: " + keyword);
+					
+					return prev + 1;
+				}, 0);
+			
+			Array.from( globalContainer.querySelectorAll(".userContentWrapper") )
 				.filter( e => e.textContent.toUpperCase().includes(keyword.toUpperCase()) )
 				.map(findParentStory)
 				.reduce( (prev, next) =>
 				{
-					next.remove();
+					if( next.classList.contains('fbFix-muted') )
+						return prev;
+					
+					next.classList.add('fbFix-muted', 'fbFix-muted-keyword');
 					console.log("removed post containing keyword: " + keyword);
 
 					return prev + 1;
 				}, 0);
 		}
-		
-		total += n;
-		if(n > 0)
-			console.log('total ads removed: ' + total);
 	}
 	
-	console.log('Watching for ads...');
+	console.log('Watching for ads & keywords...');
 	
-	let observer = new MutationObserver(removeAds);
+	let observer = new MutationObserver(mutePosts);
 	
 	observer.observe(globalContainer, { childList: true, subtree: true });
 	
 	chrome.storage.sync.get('keywords', keywords =>
 	{
 		filteredPostKeywords = keywords.keywords || [];
-		removeAds();
+		mutePosts();
+	});
+	
+	chrome.storage.sync.get('hideAds', hideAds =>
+	{
+		hideAds = hideAds.hideAds;
+		if(hideAds === undefined)
+			hideAds = true;
+		
+		mutePosts();
+	});
+	
+	chrome.storage.onChanged.addListener(function(changes, namespace)
+	{
+		if(namespace == 'sync')
+		{
+			let refresh = false;
+			
+			if(changes['keywords'] !== undefined)
+			{
+				console.log("keywords changed, refreshing...");
+				
+				filteredPostKeywords = changes['keywords'].newValue;
+				
+				globalContainer.querySelectorAll('.fbFix-muted-keyword')
+					.forEach( e => e.classList.remove('fbFix-muted', 'fbFix-muted-keyword') );
+				
+				refresh = true;
+			}
+			
+			if(changes['hideAds'] !== undefined)
+			{
+				console.log("hideAds changed, refreshing...");
+				
+				hideAds = changes['hideAds'].newValue;
+				
+				globalContainer.querySelectorAll('.fbFix-muted-ad')
+					.forEach( e => e.classList[hideAds ? 'add' : 'remove']('fbFix-muted') );
+				
+				totalAds = 0;
+			}
+			
+			if(refresh)
+				mutePosts();
+		}
 	});
 	
 	// remove initial ads that the observer might have missed (usually one initial ad)
-	removeAds();
+	mutePosts();
 	
 	// clicks the "More Stories" button because after the first ad has been removed,
 	// the sroll area is smaller and the button can become visible; more stories need to be loaded
