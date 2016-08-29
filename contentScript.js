@@ -1,9 +1,22 @@
+function fixAdSidebar()
+{
+	let adSidebar = document.getElementById('pagelet_ego_pane');
+	adSidebar.classList.add('fbFix-muted-ad');
+}
+
+function hideAdSidebar()
+{
+	let adSidebar = document.getElementById('pagelet_ego_pane');
+	if(adSidebar)
+		adSidebar.classList.add('fbFix-muted', 'fbFix-muted-ad');
+}
+
 function beginWatching()
 {
 	let totalAds = 0;
 	let globalContainer = document.getElementById('globalContainer');
 	let filteredPostKeywords = [];
-	let hideAds = true;
+	let hideAds;
 	let totalTime = 0;
 	
 	function findParentStory(element)
@@ -28,9 +41,13 @@ function beginWatching()
 	{
 		let startTime = Date.now();
 		
+		fixAdSidebar();
+		
 		if(hideAds)
 		{
-			let n = Array.from( globalContainer.querySelectorAll('.uiStreamSponsoredLink, .pagelet_ego_pane') )
+			hideAdSidebar();
+			
+			let n = Array.from( globalContainer.querySelectorAll('.uiStreamSponsoredLink') )
 				.map(findParentStory)
 				.reduce( (prev, next) =>
 				{
