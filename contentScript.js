@@ -1,4 +1,4 @@
-function watchForAds()
+function beginWatching()
 {
 	let totalAds = 0;
 	let globalContainer = document.getElementById('globalContainer');
@@ -153,7 +153,7 @@ function watchForAds()
 	// the sroll area is smaller and the button can become visible; more stories need to be loaded
 	let moreStories = globalContainer.querySelector('[data-testid=fbfeed_placeholder_story]');
 	if(moreStories)
-		moreStories = moreStories.nextSiblingElement;
+		moreStories = moreStories.nextSibling;
 	if(moreStories)
 		moreStories.click();
 }
@@ -163,6 +163,6 @@ var readyStateInterval = setInterval( () =>
 	if( document.readyState === "complete" && document.getElementById('globalContainer') )
 	{
 		clearInterval(readyStateInterval);
-		watchForAds();
+		beginWatching();
 	}
 }, 100);
