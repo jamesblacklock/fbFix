@@ -64,7 +64,7 @@ chrome.storage.sync.get('keywords', keywords =>
 	{
 		let keyword = keywordInput.value.trim();
 		
-		if(keyword)
+		if( keyword && !new Set(keywords).has(keyword) )
 		{
 			createKeywordElement(keyword);
 			keywords.push(keyword);

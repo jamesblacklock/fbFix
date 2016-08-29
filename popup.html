@@ -45,6 +45,13 @@
 			padding: 8px 0;
 		}
 		
+		#keywords:empty::after
+		{
+			content: "(none)";
+			color: #aaa;
+			font-style: italic;
+		}
+		
 		#keywords > div
 		{
 			padding: 4px 0;
@@ -67,7 +74,7 @@
 	<div>Filtered post keywords:</div>
 	<div id="keywords"></div>
 	<button id="addKeyword">+</button>
-	<input id="keywordInput">
+	<input id="keywordInput" placeholder="Add keyword">
 	<hr>
 	<div>
 		<input type='checkbox' id="hideSponsored"/>
