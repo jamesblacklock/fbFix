@@ -1,14 +1,23 @@
 function fixAdSidebar()
 {
 	let adSidebar = document.getElementById('pagelet_ego_pane');
-	adSidebar.classList.add('fbFix-muted-ad');
-}
-
-function hideAdSidebar()
-{
-	let adSidebar = document.getElementById('pagelet_ego_pane');
 	if(adSidebar)
 		adSidebar.classList.add('fbFix-muted', 'fbFix-muted-ad');
+	
+	Array.from( globalContainer.querySelectorAll('.uiHeaderTitle > .adsCategoryTitleLink') )
+		.map(element =>
+		{
+			while( element && !element.classList.contains('ego_column') )
+				element = element.parentElement;
+			
+			return element;
+		})
+		.reduce( (prev, next) =>
+		{
+			next.classList.add('fbFix-muted-ad');
+			
+			return prev + 1;
+		}, 0);
 }
 
 function beginWatching()
@@ -35,6 +44,31 @@ function beginWatching()
 		}
 				
 		return temp;
+	}
+	
+	function hideAdSidebar()
+	{
+		let adSidebar = document.getElementById('pagelet_ego_pane');
+		if(adSidebar)
+			adSidebar.classList.add('fbFix-muted', 'fbFix-muted-ad');
+		
+		Array.from( globalContainer.querySelectorAll('.uiHeaderTitle > .adsCategoryTitleLink') )
+			.map(element =>
+			{
+				while( element && !element.classList.contains('ego_column') )
+					element = element.parentElement;
+				
+				return element;
+			})
+			.reduce( (prev, next) =>
+			{
+				if( next.classList.contains('fbFix-muted') )
+					return prev;
+				
+				next.classList.add('fbFix-muted', 'fbFix-muted-ad');
+				
+				return prev + 1;
+			}, 0);
 	}
 	
 	function mutePosts()
