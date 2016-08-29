@@ -4,6 +4,7 @@ function watchForAds()
 	let globalContainer = document.getElementById('globalContainer');
 	let filteredPostKeywords = [];
 	let hideAds = true;
+	let totalTime = 0;
 	
 	function findParentStory(element)
 	{
@@ -25,6 +26,8 @@ function watchForAds()
 	
 	function mutePosts()
 	{
+		let startTime = Date.now();
+		
 		if(hideAds)
 		{
 			let n = Array.from( globalContainer.querySelectorAll('.uiStreamSponsoredLink') )
@@ -83,6 +86,12 @@ function watchForAds()
 					return prev + 1;
 				}, 0);
 		}
+		
+		let elapsedTime = Date.now() - startTime;
+		totalTime += elapsedTime;
+		
+		console.log('mute posts cycle took ' + elapsedTime + ' milliseconds');
+		console.log('total time spent muting posts since page load: ' + totalTime + ' milliseconds');
 	}
 	
 	console.log('Watching for ads & keywords...');
