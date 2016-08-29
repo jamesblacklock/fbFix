@@ -119,8 +119,10 @@ function beginWatching()
 					return prev + 1;
 				}, 0);
 			
-			Array.from( globalContainer.querySelectorAll(".userContentWrapper") )
-				.filter( e => e.childElementCount == 2 && e.firstElementChild.textContent.toUpperCase().includes(keyword.toUpperCase()) )
+			Array.from( globalContainer.querySelectorAll(".userContentWrapper, .userContentWrapper > div > div > h5") )
+				.filter( e =>
+					(e.childElementCount == 2 && e.firstElementChild.textContent.toUpperCase().includes(keyword.toUpperCase())) ||
+					(e.matches('.userContentWrapper > div > div > h5') && e.textContent.toUpperCase().includes(keyword.toUpperCase())) )
 				.map(findParentStory)
 				.reduce( (prev, next) =>
 				{
