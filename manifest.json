@@ -1,6 +1,6 @@
 {
 	"manifest_version": 2,
-    
+	
 	"name": "Facebook Fixer",
 	"short_name": "FbFix",
 	"description": "Remove obnoxious Facebook 'Sponsored Post' ads and hide boring posts containing user-defined keywords ('trump', 'clinton', etc.)",
@@ -9,13 +9,13 @@
 	"icons": { "128": "icon-big.png" },
 	
 	"browser_action":
-    {
+	{
 		"default_icon": "icon.png",
 		"default_popup": "popup.html"
 	},
-    
-    "permissions": ["storage"],
-    
+	
+	"permissions": ["storage"],
+	
 	"content_scripts":
 	[{
 		"matches":	["*://www.facebook.com/*"],
