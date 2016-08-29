@@ -5,14 +5,32 @@ chrome.storage.sync.get(FbFixHideAdsSettingsKey, hideAds =>
 	if(hideAds === undefined)
 		hideAds = true;
 	
-	let hideSponsored = document.getElementById("hideSponsored");
+	let hideAdsElement = document.getElementById("hideAds");
 	
-	hideSponsored.checked = hideAds;
+	hideAdsElement.checked = hideAds;
 	
-	hideSponsored.addEventListener( "click", e =>
+	hideAdsElement.addEventListener( "click", e =>
 	{
-		hideAds = hideSponsored.checked;
+		hideAds = hideAdsElement.checked;
 		chrome.storage.sync.set({[FbFixHideAdsSettingsKey]: hideAds});
+	});
+});
+
+chrome.storage.sync.get(FbFixHideKeywordsSettingsKey, hideKeywords =>
+{
+	hideKeywords = hideKeywords[FbFixHideKeywordsSettingsKey];
+	
+	if(hideKeywords === undefined)
+		hideKeywords = true;
+	
+	let hideKeywordsElement = document.getElementById("hideKeywords");
+	
+	hideKeywordsElement.checked = hideKeywords;
+	
+	hideKeywordsElement.addEventListener( "click", e =>
+	{
+		hideKeywords = hideKeywordsElement.checked;
+		chrome.storage.sync.set({[FbFixHideKeywordsSettingsKey]: hideKeywords});
 	});
 });
 

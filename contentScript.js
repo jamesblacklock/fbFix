@@ -26,6 +26,7 @@ function beginWatching()
 	let globalContainer = document.getElementById('globalContainer');
 	let filteredPostKeywords = [];
 	let hideAds;
+	let hideKeywords;
 	let totalTime = 0;
 	
 	function findParentStory(element)
@@ -41,8 +42,13 @@ function beginWatching()
 			
 			while( !temp.matches('.userContentWrapper') )
 				temp = temp.parentElement;
+			
+			temp = temp.parentElement.parentElement;
+			
+			if( temp.parentElement.parentElement.matches('._4-u2._4-u8') )
+				temp = temp.parentElement.parentElement;
 		}
-				
+		
 		return temp;
 	}
 	
@@ -98,42 +104,45 @@ function beginWatching()
 				console.log('total ads removed: ' + totalAds);
 		}
 		
-		for(let keyword of filteredPostKeywords)
+		if(hideKeywords)
 		{
-			// remove comments first so that a comment won't make a whole post disappear
-			Array.from( globalContainer.querySelectorAll(".UFIComment") )
-				.filter( e => e.textContent.toUpperCase().includes(keyword.toUpperCase()) )
-				.reduce( (prev, next) =>
-				{
-					if( next.classList.contains('fbFix-muted') )
-						return prev;
-					
-					// this means the comment being removed has a reply list which also should be removed
-					if( next.nextSibling && next.nextSibling.matches && next.nextSibling.matches('.UFIReplyList') )
-						next.nextSibling.classList.add('fbFix-muted', 'fbFix-muted-keyword');
-					
-					next.classList.add('fbFix-muted', 'fbFix-muted-keyword');
-					
-					console.log("removed comment containing keyword: " + keyword);
-					
-					return prev + 1;
-				}, 0);
-			
-			Array.from( globalContainer.querySelectorAll(".userContentWrapper, .userContentWrapper > div > div > h5") )
-				.filter( e =>
-					(e.childElementCount == 2 && e.firstElementChild.textContent.toUpperCase().includes(keyword.toUpperCase())) ||
-					(e.matches('.userContentWrapper > div > div > h5') && e.textContent.toUpperCase().includes(keyword.toUpperCase())) )
-				.map(findParentStory)
-				.reduce( (prev, next) =>
-				{
-					if( next.classList.contains('fbFix-muted') )
-						return prev;
-					
-					next.classList.add('fbFix-muted', 'fbFix-muted-keyword');
-					console.log("removed post containing keyword: " + keyword);
-
-					return prev + 1;
-				}, 0);
+			for(let keyword of filteredPostKeywords)
+			{
+				// remove comments first so that a comment won't make a whole post disappear
+				Array.from( globalContainer.querySelectorAll(".UFIComment") )
+					.filter( e => e.textContent.toUpperCase().includes(keyword.toUpperCase()) )
+					.reduce( (prev, next) =>
+					{
+						if( next.classList.contains('fbFix-muted') )
+							return prev;
+						
+						// this means the comment being removed has a reply list which also should be removed
+						if( next.nextSibling && next.nextSibling.matches && next.nextSibling.matches('.UFIReplyList') )
+							next.nextSibling.classList.add('fbFix-muted', 'fbFix-muted-keyword');
+						
+						next.classList.add('fbFix-muted', 'fbFix-muted-keyword');
+						
+						console.log("removed comment containing keyword: " + keyword);
+						
+						return prev + 1;
+					}, 0);
+				
+				Array.from( globalContainer.querySelectorAll(".userContentWrapper, .userContentWrapper > div > div > h5") )
+					.filter( e =>
+						(e.childElementCount == 2 && e.firstElementChild.textContent.toUpperCase().includes(keyword.toUpperCase())) ||
+						(e.matches('.userContentWrapper > div > div > h5') && e.textContent.toUpperCase().includes(keyword.toUpperCase())) )
+					.map(findParentStory)
+					.reduce( (prev, next) =>
+					{
+						if( next.classList.contains('fbFix-muted') )
+							return prev;
+						
+						next.classList.add('fbFix-muted', 'fbFix-muted-keyword');
+						console.log("removed post containing keyword: " + keyword);
+	
+						return prev + 1;
+					}, 0);
+			}
 		}
 		
 		let elapsedTime = Date.now() - startTime;
@@ -152,6 +161,15 @@ function beginWatching()
 	chrome.storage.sync.get(FbFixKeywordsSettingsKey, result =>
 	{
 		filteredPostKeywords = result[FbFixKeywordsSettingsKey] || [];
+		mutePosts();
+	});
+	
+	chrome.storage.sync.get(FbFixHideKeywordsSettingsKey, result =>
+	{
+		hideKeywords = result[FbFixHideKeywordsSettingsKey];
+		if(hideKeywords === undefined)
+			hideKeywords = true;
+		
 		mutePosts();
 	});
 	
@@ -178,6 +196,18 @@ function beginWatching()
 				
 				globalContainer.querySelectorAll('.fbFix-muted-keyword')
 					.forEach( e => e.classList.remove('fbFix-muted', 'fbFix-muted-keyword') );
+				
+				refresh = true;
+			}
+			
+			if(changes[FbFixHideKeywordsSettingsKey] !== undefined)
+			{
+				console.log("hideKeywords changed, refreshing...");
+				
+				hideKeywords = changes[FbFixHideKeywordsSettingsKey].newValue;
+				
+				globalContainer.querySelectorAll('.fbFix-muted-keyword')
+					.forEach( e => e.classList[hideKeywords ? 'add' : 'remove']('fbFix-muted') );
 				
 				refresh = true;
 			}

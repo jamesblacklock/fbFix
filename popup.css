@@ -1,0 +1,63 @@
+body
+{
+	width: 200px;
+}
+
+button
+{
+	padding: 0;
+	border: none;
+	font-size: 23px;
+	font-weight: bold;
+	border-radius: 3px;
+	background: white;
+	margin-top: -8px;
+	position: relative;
+	top: 3px;
+	outline: none;
+	cursor: pointer;
+}
+
+input[type=checkbox]
+{
+	position: relative;
+	top: 2px;
+}
+
+#addKeyword
+{
+	color: cornflowerblue;
+}
+
+#addKeyword:active
+{
+	color: blue;
+}
+
+#keywords
+{
+	padding: 8px 0;
+}
+
+#keywords:empty::after
+{
+	content: "(none)";
+	color: #aaa;
+	font-style: italic;
+}
+
+#keywords > div
+{
+	padding: 4px 0;
+}
+
+#keywords > div > button
+{
+	color: red;
+	top: 4px;
+}
+
+#keywords > div > button:active
+{
+	color: brown;
+}

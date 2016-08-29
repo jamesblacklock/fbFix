@@ -20,6 +20,6 @@
 	[{
 		"matches":	["*://www.facebook.com/*"],
 		"js":		["keys.js", "contentScript.js"],
-		"css":		["style.css"]
+		"css":		["contentScript.css"]
 	}]
 }

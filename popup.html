@@ -3,81 +3,20 @@
 <html>
 
 <head>
-	<style>
-		body
-		{
-			width: 200px;
-		}
-		
-		button
-		{
-		    padding: 0;
-			border: none;
-			font-size: 23px;
-			font-weight: bold;
-			border-radius: 3px;
-			background: white;
-			margin-top: -8px;
-			position: relative;
-			top: 3px;
-			outline: none;
-			cursor: pointer;
-		}
-		
-		input[type=checkbox]
-		{
-			position: relative;
-			top: 2px;
-		}
-		
-		#addKeyword
-		{
-			color: cornflowerblue;
-		}
-		
-		#addKeyword:active
-		{
-			color: blue;
-		}
-		
-		#keywords
-		{
-			padding: 8px 0;
-		}
-		
-		#keywords:empty::after
-		{
-			content: "(none)";
-			color: #aaa;
-			font-style: italic;
-		}
-		
-		#keywords > div
-		{
-			padding: 4px 0;
-		}
-		
-		#keywords > div > button
-		{
-			color: red;
-			top: 4px;
-		}
-		
-		#keywords > div > button:active
-		{
-			color: brown;
-		}
-	</style>
+	<link type='text/css' rel='stylesheet' href='popup.css'/>
 </head>
 
 <body>
-	<div>Filtered post keywords:</div>
+	<div>
+		<input type='checkbox' id="hideKeywords"/>
+		Hide posts containing keywords:
+	</div>
 	<div id="keywords"></div>
 	<button id="addKeyword">+</button>
 	<input id="keywordInput" placeholder="Add keyword">
 	<hr>
 	<div>
-		<input type='checkbox' id="hideSponsored"/>
+		<input type='checkbox' id="hideAds"/>
 		Hide Sponsored Content (ads)
 	</div>
 	

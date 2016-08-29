@@ -1,0 +1,9 @@
+.fbFix-muted
+{
+	display: none;
+}
+
+#pagelet_ego_pane:not(.fbFix-muted-ad)
+{
+	display: none;
+}
