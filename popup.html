@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<style>
+		body
+		{
+			width: 200px;
+		}
+		
+		button
+		{
+			padding: 0 4px;
+			border: 1px solid;
+			font-weight: bold;
+			border-radius: 3px;
+			background: white;
+		}
+		
+		#addKeyword
+		{
+			border-color: cornflowerblue;
+			color: cornflowerblue;
+		}
+		
+		#addKeyword:active
+		{
+			background: lavender;
+		}
+		
+		#keywords
+		{
+			padding: 8px 0;
+		}
+		
+		#keywords > div
+		{
+			padding: 4px 0;
+		}
+		
+		#keywords > div > button
+		{
+			border-color: red;
+			color: red;
+		}
+		
+		#keywords > div > button:active
+		{
+			background: pink;
+		}
+	</style>
+</head>
+
+<body>
+	<div>Filtered post keywords:</div>
+	<div id="keywords"></div>
+	<button id="addKeyword">+</button>
+	<input id="keywordInput">
+	
+	<script src="popup.js"></script>
+</body>
+
+</html>
+
