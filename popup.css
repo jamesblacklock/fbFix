@@ -13,7 +13,7 @@ button
 	background: white;
 	margin-top: -8px;
 	position: relative;
-	top: 3px;
+	top: 2px;
 	outline: none;
 	cursor: pointer;
 }
@@ -21,7 +21,7 @@ button
 input[type=checkbox]
 {
 	position: relative;
-	top: 2px;
+	top: 1px;
 }
 
 #addKeyword
@@ -54,7 +54,7 @@ input[type=checkbox]
 #keywords > div > button
 {
 	color: red;
-	top: 4px;
+	top: 3px;
 }
 
 #keywords > div > button:active
