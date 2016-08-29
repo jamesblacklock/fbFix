@@ -73,7 +73,7 @@ function watchForAds()
 				}, 0);
 			
 			Array.from( globalContainer.querySelectorAll(".userContentWrapper") )
-				.filter( e => e.textContent.toUpperCase().includes(keyword.toUpperCase()) )
+				.filter( e => e.children.length == 2 && e.firstChild.textContent.toUpperCase().includes(keyword.toUpperCase()) )
 				.map(findParentStory)
 				.reduce( (prev, next) =>
 				{
