@@ -30,11 +30,7 @@ function beginWatching()
 		
 		if(hideAds)
 		{
-			let adSidebar = document.getElementById('pagelet_ego_pane');
-			if(adSidebar)
-				adSidebar.remove();
-			
-			let n = Array.from( globalContainer.querySelectorAll('.uiStreamSponsoredLink') )
+			let n = Array.from( globalContainer.querySelectorAll('.uiStreamSponsoredLink, .pagelet_ego_pane') )
 				.map(findParentStory)
 				.reduce( (prev, next) =>
 				{
