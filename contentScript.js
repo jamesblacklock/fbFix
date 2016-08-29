@@ -1,8 +1,15 @@
-function fixAdSidebar()
+function fixAdSidebar(setting)
 {
 	let adSidebar = document.getElementById('pagelet_ego_pane');
 	if(adSidebar)
-		adSidebar.classList.add('fbFix-muted', 'fbFix-muted-ad');
+	{
+		adSidebar.classList.add('fbFix-muted-ad');
+		
+		if(setting === undefined)
+			adSidebar.classList.add('fbFix-muted');
+		else if(setting === false)
+			adSidebar.classList.remove('fbFix-muted');
+	}
 	
 	Array.from( globalContainer.querySelectorAll('.uiHeaderTitle > .adsCategoryTitleLink') )
 		.map(element =>
@@ -81,7 +88,7 @@ function beginWatching()
 	{
 		let startTime = Date.now();
 		
-		fixAdSidebar();
+		fixAdSidebar(hideAds);
 		
 		if(hideAds)
 		{
@@ -190,9 +197,9 @@ function beginWatching()
 			
 			if(changes[FbFixKeywordsSettingsKey] !== undefined)
 			{
-				console.log("keywords changed, refreshing...");
-				
 				filteredPostKeywords = changes[FbFixKeywordsSettingsKey].newValue;
+				
+				console.log("keywords=" + filteredPostKeywords + ", refreshing...");
 				
 				globalContainer.querySelectorAll('.fbFix-muted-keyword')
 					.forEach( e => e.classList.remove('fbFix-muted', 'fbFix-muted-keyword') );
@@ -202,9 +209,9 @@ function beginWatching()
 			
 			if(changes[FbFixHideKeywordsSettingsKey] !== undefined)
 			{
-				console.log("hideKeywords changed, refreshing...");
-				
 				hideKeywords = changes[FbFixHideKeywordsSettingsKey].newValue;
+				
+				console.log("hideKeywords=" + hideKeywords + ", refreshing...");
 				
 				globalContainer.querySelectorAll('.fbFix-muted-keyword')
 					.forEach( e => e.classList[hideKeywords ? 'add' : 'remove']('fbFix-muted') );
@@ -214,14 +221,15 @@ function beginWatching()
 			
 			if(changes[FbFixHideAdsSettingsKey] !== undefined)
 			{
-				console.log("hideAds changed, refreshing...");
-				
 				hideAds = changes[FbFixHideAdsSettingsKey].newValue;
 				
-				globalContainer.querySelectorAll('.fbFix-muted-ad')
+				console.log("hideAds=" + hideAds + ", refreshing...");
+				
+				document.querySelectorAll('.fbFix-muted-ad')
 					.forEach( e => e.classList[hideAds ? 'add' : 'remove']('fbFix-muted') );
 				
 				totalAds = 0;
+				refresh = true;
 			}
 			
 			if(refresh)
