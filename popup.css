@@ -24,6 +24,11 @@ input[type=checkbox]
 	top: 1px;
 }
 
+#keywordInput
+{
+	width: 165px;
+}
+
 #addKeyword
 {
 	color: cornflowerblue;
