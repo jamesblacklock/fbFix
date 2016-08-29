@@ -1,26 +1,24 @@
-
-
-chrome.storage.sync.get('hideAds', hideAds =>
+chrome.storage.sync.get(FbFixHideAdsSettingsKey, hideAds =>
 {
-	hideAds = hideAds.hideAds;
+	hideAds = hideAds[FbFixHideAdsSettingsKey];
 	
 	if(hideAds === undefined)
 		hideAds = true;
 	
 	let hideSponsored = document.getElementById("hideSponsored");
 	
+	hideSponsored.checked = hideAds;
+	
 	hideSponsored.addEventListener( "click", e =>
 	{
-		hideAds = e.target.checked;
-		chrome.storage.sync.set({'hideAds': hideAds});
+		hideAds = hideSponsored.checked;
+		chrome.storage.sync.set({[FbFixHideAdsSettingsKey]: hideAds});
 	});
-	
-	hideSponsored.checked = hideAds;
 });
 
-chrome.storage.sync.get('keywords', keywords =>
+chrome.storage.sync.get(FbFixKeywordsSettingsKey, keywords =>
 {
-	keywords = keywords.keywords || [];
+	keywords = keywords[FbFixKeywordsSettingsKey] || [];
 	
 	let keywordsElement = document.getElementById("keywords");
 	let addKeywordElement = document.getElementById("addKeyword");
@@ -77,6 +75,6 @@ chrome.storage.sync.get('keywords', keywords =>
 
 	function saveKeywords()
 	{
-		chrome.storage.sync.set({'keywords': keywords});
+		chrome.storage.sync.set({[FbFixKeywordsSettingsKey]: keywords});
 	}
 });

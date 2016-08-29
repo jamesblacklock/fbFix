@@ -86,8 +86,8 @@ function beginWatching()
 		let elapsedTime = Date.now() - startTime;
 		totalTime += elapsedTime;
 		
-		console.log('mute posts cycle took ' + elapsedTime + ' milliseconds');
-		console.log('total time spent muting posts since page load: ' + totalTime + ' milliseconds');
+		//console.log('mute posts cycle took ' + elapsedTime + ' milliseconds');
+		//console.log('total time spent muting posts since page load: ' + totalTime + ' milliseconds');
 	}
 	
 	console.log('Watching for ads & keywords...');
@@ -96,15 +96,15 @@ function beginWatching()
 	
 	observer.observe(globalContainer, { childList: true, subtree: true });
 	
-	chrome.storage.sync.get('keywords', keywords =>
+	chrome.storage.sync.get(FbFixKeywordsSettingsKey, result =>
 	{
-		filteredPostKeywords = keywords.keywords || [];
+		filteredPostKeywords = result[FbFixKeywordsSettingsKey] || [];
 		mutePosts();
 	});
 	
-	chrome.storage.sync.get('hideAds', hideAds =>
+	chrome.storage.sync.get(FbFixHideAdsSettingsKey, result =>
 	{
-		hideAds = hideAds.hideAds;
+		hideAds = result[FbFixHideAdsSettingsKey];
 		if(hideAds === undefined)
 			hideAds = true;
 		
@@ -117,11 +117,11 @@ function beginWatching()
 		{
 			let refresh = false;
 			
-			if(changes['keywords'] !== undefined)
+			if(changes[FbFixKeywordsSettingsKey] !== undefined)
 			{
 				console.log("keywords changed, refreshing...");
 				
-				filteredPostKeywords = changes['keywords'].newValue;
+				filteredPostKeywords = changes[FbFixKeywordsSettingsKey].newValue;
 				
 				globalContainer.querySelectorAll('.fbFix-muted-keyword')
 					.forEach( e => e.classList.remove('fbFix-muted', 'fbFix-muted-keyword') );
@@ -129,11 +129,11 @@ function beginWatching()
 				refresh = true;
 			}
 			
-			if(changes['hideAds'] !== undefined)
+			if(changes[FbFixHideAdsSettingsKey] !== undefined)
 			{
 				console.log("hideAds changed, refreshing...");
 				
-				hideAds = changes['hideAds'].newValue;
+				hideAds = changes[FbFixHideAdsSettingsKey].newValue;
 				
 				globalContainer.querySelectorAll('.fbFix-muted-ad')
 					.forEach( e => e.classList[hideAds ? 'add' : 'remove']('fbFix-muted') );
