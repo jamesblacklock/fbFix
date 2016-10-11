@@ -43,25 +43,10 @@ function beginWatching()
 	
 	function findParentStory(element)
 	{
-		let temp = element;
+		while( element && !element.matches('._4-u2._4-u8.mbm') )
+			element = element.parentElement;
 		
-		while( temp && !temp.matches('._4-u2._4-u8.mbm') )
-			temp = temp.parentElement;
-		
-		/*if(temp == null)
-		{
-			temp = element;
-			
-			while( !temp.matches('.userContentWrapper') )
-				temp = temp.parentElement;
-			
-			temp = temp.parentElement.parentElement;
-			
-			if( temp.parentElement.parentElement.matches('._4-u2._4-u8.mbm') )
-				temp = temp.parentElement.parentElement;
-		}*/
-		
-		return temp;
+		return element;
 	}
 	
 	function hideAdSidebar()
@@ -124,7 +109,10 @@ function beginWatching()
 			
 			for(let keywordSetting of filteredPostKeywords)
 			{
-				let {keyword, wholeWord} = typeof keywordSetting === 'string' ? {keyword: keywordSetting, wholeWord: false} : keywordSetting;
+				let {keyword, wholeWord} = 
+						typeof keywordSetting === 'string' ?
+						{keyword: keywordSetting, wholeWord: false} :
+						keywordSetting;
 				
 				let regex = wholeWord ? 
 						RegExp("\\b" + regExEscape(keyword) + "\\b", "i") : 
