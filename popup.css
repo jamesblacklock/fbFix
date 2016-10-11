@@ -60,6 +60,8 @@ input[type=checkbox]
 	content: "(none)";
 	color: #aaa;
 	font-style: italic;
+	padding-bottom: 5px;
+	display: inline-block;
 }
 
 #keywords > div
