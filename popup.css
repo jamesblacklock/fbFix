@@ -1,6 +1,16 @@
 body
 {
-	width: 200px;
+	min-width: 200px;
+}
+
+table
+{
+	width: 100%;
+}
+
+thead th
+{
+	padding-top: 6px;
 }
 
 button
@@ -27,6 +37,7 @@ input[type=checkbox]
 #keywordInput
 {
 	width: 165px;
+	padding: 2px 4px;
 }
 
 #addKeyword
@@ -56,13 +67,28 @@ input[type=checkbox]
 	padding: 4px 0;
 }
 
-#keywords > div > button
+#keywords button
 {
 	color: red;
 	top: 3px;
 }
 
-#keywords > div > button:active
+#keywords button:active
 {
 	color: brown;
+}
+
+tr
+{
+	white-space: nowrap;
+}
+
+th
+{
+	text-align: left;
+}
+
+.right
+{
+	text-align: right;
 }

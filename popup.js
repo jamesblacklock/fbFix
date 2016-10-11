@@ -38,6 +38,14 @@ chrome.storage.sync.get(FbFixKeywordsSettingsKey, keywords =>
 {
 	keywords = keywords[FbFixKeywordsSettingsKey] || [];
 	
+	keywords = keywords.map(kw =>
+	{
+		if(typeof kw === 'string')
+			return {keyword: kw, wholeWord: false};
+		else
+			return kw;
+	});
+	
 	let keywordsElement = document.getElementById("keywords");
 	let addKeywordElement = document.getElementById("addKeyword");
 	let keywordInput = document.getElementById("keywordInput");
@@ -59,28 +67,47 @@ chrome.storage.sync.get(FbFixKeywordsSettingsKey, keywords =>
 	
 	function createKeywordElement(keyword)
 	{
-		let div = document.createElement('DIV');
-		div.innerHTML = `<button>&times;</button> "${keyword}"`;
-		div.firstChild.addEventListener("click", removeKeyword);
+		let tr = document.createElement('TR');
+		tr.innerHTML =
+			`<td>
+				<button class="delBtn">&times;</button>
+				"<span class="kw">${keyword.keyword}</span>"
+			</td>
+			<td class="right">
+				<input class="wwChk" type='checkbox' ${keyword.wholeWord ? 'checked' : ''}>
+			</td>`;
 		
-		keywordsElement.appendChild(div);
+		tr.querySelector('.delBtn').addEventListener("click", removeKeyword);
+		tr.querySelector('.wwChk').addEventListener("click", setWholeWord);
+		
+		console.log(keyword);
+		keywordsElement.appendChild(tr);
+	}
+	
+	function setWholeWord(e)
+	{
+		let text = e.target.parentElement.parentElement.querySelector('.kw').textContent;
+		
+		keywords.find(v => v.keyword === text).wholeWord = e.target.checked;
+		
+		saveKeywords();
 	}
 
 	function removeKeyword(e)
 	{
-		let keyword = e.target.parentElement.textContent.substr(3).slice(0, -1);
+		let keyword = e.target.parentElement.querySelector('.kw').textContent;
 		
-		e.target.parentElement.remove();
-		keywords.splice(keywords.findIndex(v => v === keyword), 1);
+		e.target.parentElement.parentElement.remove();
+		keywords.splice(keywords.findIndex(v => v.keyword === keyword), 1);
 		
 		saveKeywords();
 	}
 
 	function addKeyword()
 	{
-		let keyword = keywordInput.value.trim();
+		let keyword = {keyword: keywordInput.value.trim(), wholeWord: false};
 		
-		if( keyword && !new Set(keywords).has(keyword) )
+		if( keyword.keyword && keywords.findIndex(v => v.keyword === keyword.keyword) < 0 )
 		{
 			createKeywordElement(keyword);
 			keywords.push(keyword);
