@@ -1,9 +1,15 @@
 .fbFix-muted
 {
-	display: none;
+	display: none !important;
 }
 
 #pagelet_ego_pane:not(.fbFix-muted-ad)
 {
 	display: none;
+}
+
+._4-u2._4-u8.mbm:not(.fbFix-scanned),
+#pagelet_trending_tags_and_topics:not(.fbFix-scanned)
+{
+	visibility: hidden;
 }

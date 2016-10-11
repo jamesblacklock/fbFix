@@ -27,6 +27,11 @@ function fixAdSidebar(setting)
 		}, 0);
 }
 
+function regExEscape(s)
+{
+	return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
 function beginWatching()
 {
 	let totalAds = 0;
@@ -40,10 +45,10 @@ function beginWatching()
 	{
 		let temp = element;
 		
-		while( temp && !temp.id.startsWith('hyperfeed_story') )
+		while( temp && !temp.matches('._4-u2._4-u8.mbm') )
 			temp = temp.parentElement;
 		
-		if(temp == null)
+		/*if(temp == null)
 		{
 			temp = element;
 			
@@ -52,9 +57,9 @@ function beginWatching()
 			
 			temp = temp.parentElement.parentElement;
 			
-			if( temp.parentElement.parentElement.matches('._4-u2._4-u8') )
+			if( temp.parentElement.parentElement.matches('._4-u2._4-u8.mbm') )
 				temp = temp.parentElement.parentElement;
-		}
+		}*/
 		
 		return temp;
 	}
@@ -113,11 +118,21 @@ function beginWatching()
 		
 		if(hideKeywords)
 		{
-			for(let keyword of filteredPostKeywords)
+			let trendingItem = document.getElementById('browse:independent:modules:pagelet');
+			if(trendingItem)
+				trendingItem.classList.removeClass('fbFix-muted', 'fbFix-muted-keyword');
+			
+			for(let keywordSetting of filteredPostKeywords)
 			{
+				let {keyword, wholeWord} = typeof keywordSetting === 'string' ? {keyword: keywordSetting, wholeWord: false} : keywordSetting;
+				
+				let regex = wholeWord ? 
+						RegExp("\\b" + regExEscape(keyword) + "\\b", "i") : 
+						RegExp(".*" + regExEscape(keyword) + ".*", "i");
+				
 				// remove comments first so that a comment won't make a whole post disappear
 				Array.from( globalContainer.querySelectorAll(".UFIComment") )
-					.filter( e => e.textContent.toUpperCase().includes(keyword.toUpperCase()) )
+					.filter( e => regex.test(e.textContent) )
 					.reduce( (prev, next) =>
 					{
 						if( next.classList.contains('fbFix-muted') )
@@ -136,8 +151,8 @@ function beginWatching()
 				
 				Array.from( globalContainer.querySelectorAll(".userContentWrapper, .userContentWrapper > div > div > h5") )
 					.filter( e =>
-						(e.childElementCount == 2 && e.firstElementChild.textContent.toUpperCase().includes(keyword.toUpperCase())) ||
-						(e.matches('.userContentWrapper > div > div > h5') && e.textContent.toUpperCase().includes(keyword.toUpperCase())) )
+						(e.childElementCount == 2 && regex.test(e.firstElementChild.textContent)) ||
+						(e.matches('.userContentWrapper > div > div > h5') && regex.test(e.textContent)) )
 					.map(findParentStory)
 					.reduce( (prev, next) =>
 					{
@@ -149,8 +164,37 @@ function beginWatching()
 	
 						return prev + 1;
 					}, 0);
+				
+				// scan treding topics
+				Array.from( globalContainer.querySelectorAll("li[data-topicid]") )
+					.filter( e => regex.test(e.textContent) )
+					.reduce( (prev, next) =>
+					{
+						if( next.classList.contains('fbFix-muted') )
+							return prev;
+						
+						next.classList.add('fbFix-muted', 'fbFix-muted-keyword');
+						console.log("removed trending topic containing keyword: " + keyword);
+						
+						return prev + 1;
+					}, 0);
+				
+				if(trendingItem && !trendingItem.classList.contains('fbFix-muted'))
+				{
+					if( regex.test(trendingItem.textContent) )
+					{
+						trendingItem.classList.addClass('fbFix-muted', 'fbFix-muted-keyword');
+						console.log("trending topic page header containing keyword: " + keyword);
+					}
+				}
 			}
 		}
+		
+		setTimeout(
+		() => {
+			document.querySelectorAll("._4-u2._4-u8.mbm:not(.fbFix-scanned),#pagelet_trending_tags_and_topics")
+					.forEach( x => x.classList.add('fbFix-scanned') );
+		}, 20);
 		
 		let elapsedTime = Date.now() - startTime;
 		totalTime += elapsedTime;
