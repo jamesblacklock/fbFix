@@ -84,7 +84,7 @@ function beginWatching()
 		{
 			hideAdSidebar();
 			
-			let n = Array.from( globalContainer.querySelectorAll('.uiStreamSponsoredLink') )
+			let n = Array.from( globalContainer.querySelectorAll('._m8d') )
 				.map(findParentStory)
 				.reduce( (prev, next) =>
 				{
