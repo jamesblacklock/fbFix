@@ -84,7 +84,7 @@ function beginWatching()
 		{
 			hideAdSidebar();
 			
-			let n = Array.from( globalContainer.querySelectorAll('._m8d') )
+			let n = Array.from( globalContainer.querySelectorAll('._m8d, ._m8c') )
 				.map(findParentStory)
 				.reduce( (prev, next) =>
 				{
