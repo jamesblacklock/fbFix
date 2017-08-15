@@ -137,7 +137,7 @@ function beginWatching()
 						return prev + 1;
 					}, 0);
 				
-				Array.from( globalContainer.querySelectorAll(".userContentWrapper, .userContentWrapper > div > div > h5") )
+				Array.from( globalContainer.querySelectorAll(".fbUserPost") )
 					.filter( e =>
 						(e.childElementCount == 2 && regex.test(e.firstElementChild.textContent)) ||
 						(e.matches('.userContentWrapper > div > div > h5') && regex.test(e.textContent)) )
@@ -231,7 +231,7 @@ function beginWatching()
 			{
 				filteredPostKeywords = changes[FbFixKeywordsSettingsKey].newValue;
 				
-				console.log("keywords=" + filteredPostKeywords + ", refreshing...");
+				console.log("keywords=", filteredPostKeywords, "\nrefreshing...");
 				
 				globalContainer.querySelectorAll('.fbFix-muted-keyword')
 					.forEach( e => e.classList.remove('fbFix-muted', 'fbFix-muted-keyword') );
