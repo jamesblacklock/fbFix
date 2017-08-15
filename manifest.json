@@ -4,8 +4,7 @@
 	"name": "Facebook Fixer",
 	"short_name": "FbFix",
 	"description": "Removes obnoxious Facebook Sponsored Content (ads) and hides boring posts containing user-defined keywords ('trump', 'clinton', etc)",
-	"version": "1.4.5",
-	"default_locale": "en",
+	"version": "1.4.6",
 	"author": "James Blacklock",
 	
 	"icons":
@@ -14,7 +13,7 @@
 		"32": "icon32.png",
 		"48": "icon48.png",
 		"64": "icon64.png",
-		"128": "icon128.png",
+		"128": "icon128.png"
 	},
 	
 	"browser_action":
