@@ -105,7 +105,7 @@ function beginWatching()
 		{
 			let trendingItem = document.getElementById('browse:independent:modules:pagelet');
 			if(trendingItem)
-				trendingItem.classList.removeClass('fbFix-muted', 'fbFix-muted-keyword');
+				trendingItem.classList.remove('fbFix-muted', 'fbFix-muted-keyword');
 			
 			for(let keywordSetting of filteredPostKeywords)
 			{
@@ -171,7 +171,7 @@ function beginWatching()
 				{
 					if( regex.test(trendingItem.textContent) )
 					{
-						trendingItem.classList.addClass('fbFix-muted', 'fbFix-muted-keyword');
+						trendingItem.classList.add('fbFix-muted', 'fbFix-muted-keyword');
 						console.log("trending topic page header containing keyword: " + keyword);
 					}
 				}
