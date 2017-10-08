@@ -137,7 +137,7 @@ function beginWatching()
 						return prev + 1;
 					}, 0);
 				
-				Array.from( globalContainer.querySelectorAll(".fbUserPost") )
+				Array.from( globalContainer.querySelectorAll(".fbUserStory") )
 					.filter( e =>
 						(e.childElementCount == 2 && regex.test(e.firstElementChild.textContent)) ||
 						(e.matches('.userContentWrapper > div > div > h5') && regex.test(e.textContent)) )
